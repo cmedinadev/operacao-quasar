@@ -1,6 +1,6 @@
 package dev.cmedina.desafiomeli.controller;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,18 +12,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.cmedina.desafiomeli.TopSecretService;
 import dev.cmedina.desafiomeli.model.PayloadSatelliteData;
 import dev.cmedina.desafiomeli.model.Position;
 import dev.cmedina.desafiomeli.model.ResultSecret;
 import dev.cmedina.desafiomeli.model.SatelliteData;
+import dev.cmedina.desafiomeli.service.TopSecretService;
 
 @RestController
 @RequestMapping(value = "/")
 public class TopSecretController {
 
 	
-	 private static final Map<String, SatelliteData> RECEIVED_DATA = new LinkedHashMap<>();
+	 private static final Map<String, SatelliteData> RECEIVED_DATA = new HashMap<>();
 	
 	
 	 @Autowired
@@ -38,8 +38,8 @@ public class TopSecretController {
 		Float[] location = program.getLocation(distances);
 		String message = program.getMessage(messages);
 		
-		// Em caso que não seja possível determinar a posição ou a mensagem, 
-		// então retorna: RESPONSE CODE: 404.
+		// If the location could not be determined 
+		// then return: RESPONSE CODE: 404
 		if (location == null || message == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
@@ -78,8 +78,8 @@ public class TopSecretController {
 
 		        RECEIVED_DATA.clear();
 		        
-		     // Em caso que não seja possível determinar a posição ou a mensagem, 
-				// então retorna: RESPONSE CODE: 404.
+				// If the location could not be determined 
+				// then return: RESPONSE CODE: 404
 				if (location == null || message == null) {
 					return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 				}

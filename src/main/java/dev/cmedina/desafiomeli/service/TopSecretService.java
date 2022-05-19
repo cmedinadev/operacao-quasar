@@ -1,4 +1,4 @@
-package dev.cmedina.desafiomeli;
+package dev.cmedina.desafiomeli.service;
 
 import java.util.Arrays;
 import java.util.HashMap;

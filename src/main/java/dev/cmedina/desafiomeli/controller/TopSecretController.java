@@ -25,9 +25,11 @@ public class TopSecretController {
 	
 	 private static final Map<String, SatelliteData> RECEIVED_DATA = new HashMap<>();
 	
-	
-	 @Autowired
 	 private TopSecretService program;
+	
+	 public TopSecretController(@Autowired TopSecretService program) {
+		 this.program = program;
+	 }
 	
 	 @RequestMapping(value = "/topsecret", method = RequestMethod.POST)
 	 public ResponseEntity<ResultSecret> processarDados(@RequestBody PayloadSatelliteData payload) {

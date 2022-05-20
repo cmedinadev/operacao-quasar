@@ -1,6 +1,6 @@
 # Operação Fogo de Quasar
 
-Operação Fogo de Quasar é um desafio da Empresa Mercado Livre para os candidatos que se aplicam a posição na empresa.
+Operação Fogo de Quasar é um desafio da Empresa Mercado Livre para os candidatos que se aplicam a um cargo na empresa.
 
 A missão é criar um programa em que retorne a fonte e o conteúdo da mensagem de auxílio. Para isso, contará com 3 satélites que te permitirão triangular a posição, mas cuidado, a mensagem não estará completa em cada satélite devido ao campo de asteroides em frente a nave.
 
@@ -10,11 +10,11 @@ Este projeto foi desenvolvido na tecnologia Java como um serviço REST/API que p
 
 ## O Problema 
 
-Determinar a localização do emissor da mensagem com base nas distâncias.
+Determinar a localização do emissor da mensagem com base na distância.
 
 ## Solução
 
-Para solucionar o problema foi utilizado um pouco de geometria analítica para determinar a posição do emissor da mensagem com base no sistema de triangulação. Dizer que o receptorestá a uma distância X, significa dizer que ele pode estar em qualquer lugar da esfera imaginária, em qualquer direção. 
+Para solucionar o problema foi utilizado geometria analítica para determinar a posição do emissor da mensagem com base no sistema de triangulação. Dizer que o receptor está a uma distância X, significa dizer que ele pode estar em qualquer lugar da esfera imaginária, em qualquer direção. 
 
 Então, para determinarmos a localização exata, utilizamos a interseção de 3 esferas (círculos) com base nas distâncias do emissor com o receptor. O ponto de interseção entre as 3 esferas é a localização do emissor.
 
@@ -33,6 +33,8 @@ Rode na pasta raiz os seguintes comandos:
 ## Recursos
 
 **HTTP POST /topsecret/**
+
+Este recurso recebe os dados dos 3 satélites e processa a informação para determinar a localização do emissor e a mensagem recebida. Caso não seja possível determinar a posição ou a mensagem, o endpoint retorna o status code 404.
 
 ***Payload***
 
@@ -149,9 +151,9 @@ Exemplos:
     curl -X POST -H "Content-type: application/json" -d '{
         "distance": 721.11,
         "message": ["this", "", "", "secret", ""]
-    }' 'http://meli-topsecret.azurewebsites.net/topsecret_split/kenobi'    
+    }' 'https://meli-topsecret.azurewebsites.net/topsecret_split/kenobi'    
 
 **HTTP GET /topsecret_split/**
 
-    curl -X GET -H "Content-type: application/json" 'http://meli-topsecret.azurewebsites.net/topsecret_split/'
+    curl -X GET -H "Content-type: application/json" 'https://meli-topsecret.azurewebsites.net/topsecret_split/'
 

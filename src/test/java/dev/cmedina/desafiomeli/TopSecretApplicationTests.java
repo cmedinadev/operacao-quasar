@@ -1,6 +1,8 @@
 package dev.cmedina.desafiomeli;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import dev.cmedina.desafiomeli.model.PayloadSatelliteData;
 import dev.cmedina.desafiomeli.model.ResultSecret;
 import dev.cmedina.desafiomeli.model.SatelliteData;
+import dev.cmedina.desafiomeli.service.TopSecretService;
 
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 class TopSecretApplicationTests {
@@ -24,8 +27,43 @@ class TopSecretApplicationTests {
 	@Autowired
 	private TestRestTemplate restTemplate;
 	
+	@Autowired
+	private TopSecretService service;
+	
 	@LocalServerPort
 	private int port;
+	
+	
+	 @Test
+	 void testGetLocationCorrect(){
+		 Float[] res = service.getLocation(721f, 300f, 412f);
+		 assertArrayEquals(new Float[] {100f, 200f}, res); 
+	 }
+	
+	 @Test
+	 void testGetLocationNotFound(){
+		 Float[] res = service.getLocation(200f, 300f, 312f);
+		 assertNull(res); 
+	 }
+
+	 @Test
+	 void testGetMessage(){
+		 String[] a = new String[] {"this", "", "", "secret", ""};
+		 String[] b = new String[] {"", "is", "", "", "message"};
+		 String[] c = new String[] {"this", "", "a", "", ""};
+		 String x = service.getMessage(a, b, c);
+		 assertEquals(x, "this is a secret message"); 
+	 }
+
+	 @Test
+	 void testGetMessageError(){
+		 String[] a = new String[] {"this", "", "", "secret", ""};
+		 String[] b = new String[] {"", "", "", "", "message"};
+		 String[] c = new String[] {"this", "", "a", "", ""};
+		 String x = service.getMessage(a, b, c);
+		 assertNull(x);  
+	 }
+	
 	
 	@Test
 	void testPostTopSecretsStatusOK() throws Exception {

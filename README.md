@@ -110,13 +110,14 @@ Passos para implantar a solução no Azure Web Apps.
        Exemplo: az group create -l brazilsouth -n rsg_meli
     4. Realizar o deploy: mvn package azure-webapp:deploy
 
-Depois que a implantação for concluída, seu aplicativo estará pronto em http://<appName>.azurewebsites.net/.
+Depois que a implantação for concluída, seu aplicativo estará pronto em https://\<appName>\.azurewebsites.net/.
 
-O nome do aplicativo está definido no pom.xml, nas configurações do plugin de deploy em: <appName>meli-topsecret</appName>
+O nome do aplicativo está definido no pom.xml, nas configurações do plugin de deploy em: 
+\<appName>meli-topsecret\</appName>
 
 ## Testes
 
-Para testar o serviço implantado no Azure Web Apps, execute os recursos com a URL base: http://meli-topsecret.azurewebsites.net/.
+Para testar o serviço implantado no Azure Web Apps, execute os recursos com a URL base: https://meli-topsecret.azurewebsites.net/.
 
 Caso o serviço retorne um Code Status 504, aguarde uns minutos e tente novamente, o serviço poderá estar adormecido para liberação de recursos que não estão em uso.
 

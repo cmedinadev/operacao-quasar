@@ -18,8 +18,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import dev.cmedina.desafiomeli.exception.InvalidMessageException;
+import dev.cmedina.desafiomeli.handler.ExceptionHandler.Error;
 import dev.cmedina.desafiomeli.model.PayloadSatelliteData;
 import dev.cmedina.desafiomeli.model.ResultSecret;
+import dev.cmedina.desafiomeli.model.Satellite;
 import dev.cmedina.desafiomeli.model.SatelliteData;
 import dev.cmedina.desafiomeli.service.TopSecretService;
 
@@ -32,8 +34,11 @@ class TopSecretApplicationTests {
 	@Autowired
 	private TopSecretService service;
 
-	@LocalServerPort
-	private int port;
+	private String urlBase;
+
+	public TopSecretApplicationTests(@LocalServerPort int port) {
+		urlBase = "http://localhost:" + port;
+	}
 
 	@Test
 	void testGetLocationCorrect() {
@@ -68,18 +73,19 @@ class TopSecretApplicationTests {
 	}
 
 	@Test
-	void testPostTopSecretsStatusOK() throws Exception {
+	void testPostTopSecretsStatusOK() {
 
-		SatelliteData kenobi = new SatelliteData("kenobi", 721f, new String[] { "this", "", "", "secret", "" });
-		SatelliteData skywaker = new SatelliteData("skywalker", 300f, new String[] { "", "is", "", "", "message" });
-		SatelliteData sato = new SatelliteData("sato", 412f, new String[] { "this", "", "a", "", "" });
+		SatelliteData kenobi = new SatelliteData(Satellite.kenobi, 721f, new String[] { "this", "", "", "secret", "" });
+		SatelliteData skywaker = new SatelliteData(Satellite.skywalker, 300f,
+				new String[] { "", "is", "", "", "message" });
+		SatelliteData sato = new SatelliteData(Satellite.sato, 412f, new String[] { "this", "", "a", "", "" });
 
 		List<SatelliteData> listSatellites = Arrays.asList(new SatelliteData[] { kenobi, skywaker, sato });
 
 		PayloadSatelliteData payloadObj = new PayloadSatelliteData(listSatellites);
 
-		ResponseEntity<ResultSecret> result = restTemplate.postForEntity("http://localhost:" + port + "/topsecret",
-				payloadObj, ResultSecret.class);
+		ResponseEntity<ResultSecret> result = restTemplate.postForEntity(urlBase + "/topsecret", payloadObj,
+				ResultSecret.class);
 
 		assertEquals(result.getStatusCode(), HttpStatus.OK);
 
@@ -92,66 +98,65 @@ class TopSecretApplicationTests {
 	}
 
 	@Test
-	void testPostTopSecretStatusNotFound() throws Exception {
+	void testPostTopSecretStatusNotFound() {
 
-		SatelliteData kenobi = new SatelliteData("kenobi", 721f, new String[] { "this", "", "", "secret", "" });
-		SatelliteData skywaker = new SatelliteData("skywalker", 300f, new String[] { "", "is", "", "", "message" });
-		SatelliteData sato = new SatelliteData("sato", 400f, new String[] { "this", "", "a", "", "" });
+		SatelliteData kenobi = new SatelliteData(Satellite.kenobi, 721f, new String[] { "this", "", "", "secret", "" });
+		SatelliteData skywaker = new SatelliteData(Satellite.skywalker, 300f,
+				new String[] { "", "is", "", "", "message" });
+		SatelliteData sato = new SatelliteData(Satellite.sato, 400f, new String[] { "this", "", "a", "", "" });
 
 		List<SatelliteData> listSatellites = Arrays.asList(new SatelliteData[] { kenobi, skywaker, sato });
 
 		PayloadSatelliteData payloadObj = new PayloadSatelliteData(listSatellites);
 
-		ResponseEntity<ResultSecret> result = restTemplate.postForEntity("http://localhost:" + port + "/topsecret",
-				payloadObj, ResultSecret.class);
+		ResponseEntity<ResultSecret> result = restTemplate.postForEntity(urlBase + "/topsecret", payloadObj,
+				ResultSecret.class);
 
 		assertEquals(result.getStatusCode(), HttpStatus.NOT_FOUND);
 
 	}
 
 	@Test
-	void testPostTopSecretSplitStatusOK() throws Exception {
+	void testPostTopSecretSplitStatusOK() {
 
-		SatelliteData kenobi = new SatelliteData("kenobi", 721f, new String[] { "this", "", "", "secret", "" });
+		SatelliteData kenobi = new SatelliteData(Satellite.kenobi, 721f, new String[] { "this", "", "", "secret", "" });
 
-		ResponseEntity<Void> result = restTemplate.postForEntity("http://localhost:" + port + "/topsecret_split/kenobi",
-				kenobi, Void.class);
+		ResponseEntity<Void> result = restTemplate.postForEntity(urlBase + "/topsecret_split/kenobi", kenobi,
+				Void.class);
 
 		assertEquals(result.getStatusCode(), HttpStatus.ACCEPTED);
 
 	}
 
-	/*
-	 * @Test void testGetTopSecretSplitStatusError() throws Exception {
-	 * 
-	 * ResponseEntity<String> result =
-	 * restTemplate.getForEntity("http://localhost:"+port+"/topsecret_split/",
-	 * String.class);
-	 * 
-	 * assertEquals(result.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
-	 * 
-	 * assertEquals(result.getBody(), "Não há informação suficiente");
-	 * 
-	 * }
-	 */
+	@Test
+	void testGetTopSecretSplitStatusError() throws Exception {
+
+		ResponseEntity<Error> result = restTemplate.getForEntity(urlBase + "/topsecret_split/", Error.class);
+
+		assertEquals(result.getStatusCode(), HttpStatus.INTERNAL_SERVER_ERROR);
+
+		assertEquals(result.getBody().message(), "Não há informação suficiente");
+
+	}
 
 	@Test
-	void testGetTopSecretSplitStatusOK() throws Exception {
+	void testGetTopSecretSplitStatusOK() {
 
-		SatelliteData skywaker = new SatelliteData("skywalker", 300f, new String[] { "", "is", "", "", "message" });
+		SatelliteData skywaker = new SatelliteData(Satellite.skywalker, 300f,
+				new String[] { "", "is", "", "", "message" });
 
-		SatelliteData sato = new SatelliteData("sato", 412f, new String[] { "this", "", "a", "", "" });
+		SatelliteData sato = new SatelliteData(Satellite.sato, 412f, new String[] { "this", "", "a", "", "" });
 
-		SatelliteData kenobi = new SatelliteData("kenobi", 721f, new String[] { "this", "", "", "secret", "" });
+		SatelliteData kenobi = new SatelliteData(Satellite.kenobi, 721f, new String[] { "this", "", "", "secret", "" });
 
-		restTemplate.postForEntity("http://localhost:" + port + "/topsecret_split/kenobi", kenobi, Void.class);
+		restTemplate.postForEntity(urlBase + "/topsecret_split/sato", sato, Void.class);
 
-		restTemplate.postForEntity("http://localhost:" + port + "/topsecret_split/skywalker", skywaker, Void.class);
+		restTemplate.postForEntity(urlBase + "/topsecret_split/kenobi", kenobi, Void.class);
 
-		restTemplate.postForEntity("http://localhost:" + port + "/topsecret_split/sato", sato, Void.class);
+		restTemplate.postForEntity(urlBase + "/topsecret_split/skywalker", skywaker, Void.class);
 
-		ResponseEntity<ResultSecret> result = restTemplate
-				.getForEntity("http://localhost:" + port + "/topsecret_split/", ResultSecret.class);
+		ResponseEntity<ResultSecret> result = restTemplate.getForEntity(urlBase + "/topsecret_split/",
+				ResultSecret.class);
 
 		assertEquals(result.getStatusCode(), HttpStatus.OK);
 

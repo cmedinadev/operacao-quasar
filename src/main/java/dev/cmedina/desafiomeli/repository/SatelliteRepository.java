@@ -18,9 +18,8 @@ public class SatelliteRepository {
 	
 	
 	public void insert(SatelliteData item) {
-		Satellite satellite = Satellite.valueOf(item.name());
-		if (!RECEIVED_DATA.containsKey(satellite)) {
-	 		RECEIVED_DATA.put(satellite, item);
+		if (!RECEIVED_DATA.containsKey(item.satellite())) {
+	 		RECEIVED_DATA.put(item.satellite(), item);
 	 	}
 	}
 
@@ -28,8 +27,8 @@ public class SatelliteRepository {
 		return RECEIVED_DATA.values();
 	}
 
-	public SatelliteData findByName(String name) {
-		return RECEIVED_DATA.get(Satellite.valueOf(name));
+	public SatelliteData findBySatellite(Satellite satellite) {
+		return RECEIVED_DATA.get(satellite);
 	}
 	
 	public void clear() {

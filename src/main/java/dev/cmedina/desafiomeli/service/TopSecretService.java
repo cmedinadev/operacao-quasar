@@ -2,8 +2,6 @@ package dev.cmedina.desafiomeli.service;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +26,6 @@ public class TopSecretService {
 		this.repository = repository;
 	}
 
-	// Satellite position data
-	private static Map<Satellite, Point> satellites = new HashMap<>() {
-		{
-			put(Satellite.kenobi, new Point(-500f, -200f));
-			put(Satellite.skywalker, new Point(100f, -100f));
-			put(Satellite.sato, new Point(500f, 100f));
-		}
-	};
-
 	/**
 	 * Returns a array object with the coordenates 'x' and 'y' of the message
 	 * sender.
@@ -52,9 +41,9 @@ public class TopSecretService {
 	 */
 	public Float[] getLocation(Float... distances) {
 
-		Point posKenobi = satellites.get(Satellite.kenobi);
-		Point posSkaywalker = satellites.get(Satellite.skywalker);
-		Point posSato = satellites.get(Satellite.sato);
+		Point posKenobi = Satellite.kenobi.getPosition();
+		Point posSkaywalker = Satellite.skywalker.getPosition();
+		Point posSato = Satellite.sato.getPosition();
 
 		Optional<Point[]> intersectAB = intersection(posKenobi.getX(), posKenobi.getY(), distances[0],
 				posSkaywalker.getX(), posSkaywalker.getY(), distances[1]);
@@ -120,7 +109,7 @@ public class TopSecretService {
 		int i = 0;
 		
 		for (Satellite satellite: Satellite.values()) {
-			SatelliteData row = repository.findByName(satellite.toString());
+			SatelliteData row = repository.findBySatellite(satellite);
 			distances[i] = row.distance();
 			messages[i] = row.message();
 			i++;

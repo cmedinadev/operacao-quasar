@@ -16,6 +16,7 @@ import dev.cmedina.desafiomeli.exception.NoEnoughInformationException;
 import dev.cmedina.desafiomeli.model.PayloadSatelliteData;
 import dev.cmedina.desafiomeli.model.Position;
 import dev.cmedina.desafiomeli.model.ResultSecret;
+import dev.cmedina.desafiomeli.model.Satellite;
 import dev.cmedina.desafiomeli.model.SatelliteData;
 import dev.cmedina.desafiomeli.service.TopSecretService;
 
@@ -55,7 +56,7 @@ public class TopSecretController {
 	public ResponseEntity<Void> processarDadosSatellite(@PathVariable("satelliteName") String satelliteName,
 			@RequestBody SatelliteData payload) {
 		
-		service.receiveSatelliteMessage(payload.withName(satelliteName));
+		service.receiveSatelliteMessage(payload.withSatellite(Satellite.valueOf(satelliteName)));
 
 		return new ResponseEntity<>(HttpStatus.ACCEPTED);
 
